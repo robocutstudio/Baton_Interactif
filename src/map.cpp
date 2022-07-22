@@ -45,7 +45,6 @@ float getOrientationZ(float val) {
   } else {
     ret = mapf(val, -180, 0, 1, 0);
   }
-
   return ret;
 }
 
@@ -67,7 +66,6 @@ float getAccelX(float val) {
   } else {
     ret = 0.00;
   }
-
   return ret;
 }
 
@@ -82,7 +80,6 @@ float getAccelY(float val) {
   } else {
     ret = 0.00;
   }
-
   return ret;
 }
 
@@ -97,7 +94,6 @@ float getAccelZ(float val) {
   } else {
     ret = 0.00;
   }
-
   return ret;
 }
 
@@ -117,7 +113,6 @@ float getGyroX(float val) {
   } else {
     ret = 0.00;
   }
-
   return ret;
 }
 
@@ -131,7 +126,6 @@ float getGyroY(float val) {
   } else {
     ret = 0.00;
   }
-
   return ret;
 }
 
@@ -145,6 +139,5 @@ float getGyroZ(float val) {
   } else {
     ret = 0.00;
   }
-
   return ret;
 }

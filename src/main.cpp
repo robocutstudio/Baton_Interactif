@@ -22,6 +22,7 @@
 
 //mapping of data from imu
 #include "map.h"
+#include "imu.h"
 
 //set eeprom memory size (max numbs of addr)
 #define EEPROM_SIZE 64 //bigger than necessary
@@ -31,8 +32,8 @@
 
 
 // Replace the next variables with your SSID/Password combination
-const char* ssid = "TRANSVERSAL"; //"roboInterweb";//
-const char* password = "VictorChristineS70";//"Amirobot2021";//
+const char* ssid =  "roboInterweb";//"TRANSVERSAL";//
+const char* password = "Amirobot2021";//"VictorChristineS70";//
 
 // Add your MQTT Broker IP address, example:
 const char* mqtt_server = "10.10.1.1";//"192.168.1.144";
@@ -40,7 +41,7 @@ const char* mqtt_server = "10.10.1.1";//"192.168.1.144";
 //IP address to send UDP data to:
 // either use the ip address of the server or
 // a network broadcast address
-const char * udpAddress = "10.10.1.126"; //"192.168.2.122"; //ip of the receiver
+const char * udpAddress = "192.168.2.7"; //"10.10.1.126"; // //ip of the receiver
 const int udpPort = 3333; //set port of choice
 
 //Are we currently connected?
@@ -170,7 +171,7 @@ void setup_wifi() {
 
   Serial.println("");
   Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
   ArduinoOTA
@@ -202,8 +203,6 @@ void setup_wifi() {
   ArduinoOTA.begin();
 
   Serial.println("Ready");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
 void reconnect() {
@@ -387,13 +386,13 @@ void displaySensorOffsets(const adafruit_bno055_offsets_t &calibData)
 void setup_imu()
 {
   Serial.println("Orientation Sensor Test"); Serial.println("");
-
+  
   /* Initialise the sensor */
-  if (!bno.begin())
+  while(!bno.begin())
   {
     /* There was a problem detecting the BNO055 ... check your connections */
     Serial.println("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-    while (1);
+    delay(1000);
   }
 
   if (!EEPROM.begin(EEPROM_SIZE))
@@ -621,7 +620,7 @@ void setup_taskLed(){
                     "TaskLED",     /* name of task. */
                     10000,       /* Stack size of task */
                     NULL,        /* parameter of the task */
-                    1,           /* priority of the task */
+                    2,           /* priority of the task */
                     &TaskLED,      /* Task handle to keep track of created task */
                     0);          /* pin task to core 0 */ 
 }
@@ -649,8 +648,11 @@ void setup() {
   artnet.setArtDmxCallback(onDmxFrame);
   client.setServer(mqtt_server, 1883);
   client.setCallback(parse_msg);
-  reconnect();
+  //reconnect();
   color_set(255,0,0,0); //Calibration color (red)
+
+  delay(5000); //SANITY BOOT FOR BNO055 BEFORE STARTING
+  
   setup_imu();
   setup_taskIMU();
   set_calibFinished();
